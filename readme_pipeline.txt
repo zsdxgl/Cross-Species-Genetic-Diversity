@@ -1,13 +1,14 @@
 1. Rads mapping
 ref="reference.fa"
 path=""
+i="samples"
 T=10
-bwa mem -t ${T} -M -R @RG\tID:${i}\tSM:${i} ${path}/${ref} ${path}/${i}_1.fastq.gz ${path}/${i}_2.fastq.gz |samtools view -@ ${T} -q 30  -b  |samtools sort --threads ${T} -o ${path}/bam/${i}.bam --reference ${path}/${ref} 
+bwa mem -t 30 -M -R @RG\tID:${i}\tSM:${i} ${path}/${ref} ${path}/${i}_1.fastq.gz ${path}/${i}_2.fastq.gz |samtools view -@ ${T} -q 30  -b  |samtools sort --threads ${T} -o ${path}/bam/${i}.bam --reference ${path}/${ref} 
 sambamba markdup --overflow-list-size 600000 --tmpdir=${path}/bam/ -r ${path}/bam/${i}.bam ${path}/bam/${i}.D.bam
 
 
 2. Orthologous genes identifing
-busco -i reference.fa -m genome --augustus -o busco.out -f  -c 10  -l actinopterygii_odb10
+busco -i anak.reference.fa -m genome --augustus -o busco.out -f  -c 10  -l actinopterygii_odb10
 ##output: busco.out/run_actinopterygii_odb10/full_table.tsv
           busco.out/run_actinopterygii_odb10/augustus_output/gff  
 
@@ -16,12 +17,12 @@ Reseqtools/iTools_Code/iTools Gfftools getCdsPep -Ref $ref -Gff ${i}.gff -OutPut
  
 
 4. Shared single-copy genes identifing
-./getgene.pl 
+./get_shared_single_copy_gene_4D_sites.pl
 ###example input:
 anak.chr.length 
 anak.reference.fa
-anak.full_table.tsv（busco）
-anak.reseqtools_out/${i}.4Dsite.gz
+anak.full_table.tsv（from busco）
+anak.reseqtools_out/anak.4Dsite.gz
 ###example output:
 anak.intervals.txt; anak.4Dsites.txt 
 
